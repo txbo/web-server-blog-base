@@ -1,41 +1,45 @@
-const getList = (author, keyworld) => {
-  return [{
-    id: 1,
-    title: 'title a',
-    content: 'content a',
-    createTime: 1556441542725,
-    author: 'zhangsan'
-  }, {
-    id: 2,
-    title: 'title b',
-    content: 'content b',
-    createTime: 1556441589677,
-    author: 'lisi'
-  }]
+const { exec } = require('../db/mysql')
+
+const getList = (author, keyword) => {
+  let sql = `select * from blogs where 1=1 `
+  if (author) sql += `and author='${author}' `
+  if (keyword) sql += `and title like '%${keyword}%' `
+  sql += `order by createtime desc;`
+  return exec(sql)
 }
 
 const getDetail = id => {
-  return {
-    id: 1,
-    title: 'title a',
-    content: 'content a',
-    createTime: 1556441542725,
-    author: 'zhangsan'
-  }
+  const sql = `select * from blogs where id='${id}'`
+  return exec(sql).then(res => res[0])
 }
 
 const newBlog = (blogData = {}) => {
-  return {
-    id: 3
-  }
+  const title = blogData.title || ''
+  const content = blogData.content || ''
+  const author = blogData.author || ''
+  const createTime = Date.now()
+  const sql = `
+    insert into blogs (title, content, createtime, author)
+    values ('${title}', '${content}', ${createTime}, '${author}');
+  `
+  return exec(sql).then(insertData => ({
+    id: insertData.insertId
+  }))
 }
 
 const updateBlog = (id, blogData = {}) => {
-  return true
+  const title = blogData.title || ''
+  const content = blogData.content || ''
+  const sql = `
+    update blogs set title='${title}', content='${content}'
+    where id=${id};
+  `
+  return exec(sql).then(updateData => updateData.affectedRows > 0)
 }
 
-const delBlog = (id) => {
-  return true
+const delBlog = (id, author) => {
+  const sql = `delete from blogs where id='${id}' and author='${author}'`
+  return exec(sql).then(deleteData => deleteData.affectedRows > 0)
 }
 
 module.exports = {
