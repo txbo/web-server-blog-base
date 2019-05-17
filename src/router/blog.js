@@ -26,7 +26,7 @@ const handleBlogRouter = (req, res) => {
   // 新建一篇博客
   if (method === 'POST' && req.path === '/api/blog/new') {
     loginCheckResult = loginCheck(req)
-    if (loginCheckResult) return loginCheck
+    if (loginCheckResult) return loginCheckResult
     const author = req.session.username
     const blogData = req.body
     blogData.author = author
@@ -36,7 +36,7 @@ const handleBlogRouter = (req, res) => {
   // 更新一篇博客
   if (method === 'POST' && req.path === '/api/blog/update') {
     loginCheckResult = loginCheck(req)
-    if (loginCheckResult) return loginCheck
+    if (loginCheckResult) return loginCheckResult
     const blogData = req.body
     const result = updateBlog(id, blogData)
     return result.then(
@@ -46,7 +46,7 @@ const handleBlogRouter = (req, res) => {
   // 删除一篇博客
   if (method === 'POST' && req.path === '/api/blog/del') {
     loginCheckResult = loginCheck(req)
-    if (loginCheckResult) return loginCheck
+    if (loginCheckResult) return loginCheckResult
     const author = req.session.username
     const result = delBlog(id, author)
     return result.then(
