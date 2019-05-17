@@ -1,9 +1,10 @@
 const querystring = require('querystring')
+const { get, set } = require('./src/db/redis')
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 
 // session 数据
-const SESSION_DATA = {}
+// const SESSION_DATA = {}
 
 const getPostData = req => {
   const promise = new Promise((resolve, reject) => {
@@ -62,18 +63,21 @@ const serverHandle = (req, res) => {
   // 解析 session
   let needSetCookie = false
   let userId = req.cookie.userid
-  if (userId) {
-    if (!SESSION_DATA[userId]) {
-      SESSION_DATA[userId] = {}
-    }
-  } else {
+  if (!userId) {
     needSetCookie = true
     userId = `${Date.now()}_${Math.random()}`
-    SESSION_DATA[userId] = {}
+    set(userId, {})
   }
-  req.session = SESSION_DATA[userId]
-  // 处理 post
-  getPostData(req).then(postData => {
+  req.sessionId = userId
+  get(req.sessionId).then(sessionData => {
+    if (sessionData === null) {
+      set(req.sessionId, {})
+      req.session = {}
+    } else {
+      req.session = sessionData
+    }
+    return getPostData(req)
+  }).then(postData => {
     req.body = postData
     //处理 blog 路由
     const blogResult = handleBlogRouter(req, res)
