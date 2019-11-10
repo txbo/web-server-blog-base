@@ -1,5 +1,5 @@
 {
-  "name": "web-server-base",
+  "name": "web-server-blog-base",
   "version": "1.0.0",
   "description": "web server base",
   "main": "bin/www.js",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/txbo/web-server-base.git"
+    "url": "git+https://github.com/txbo/web-server-blog-base.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/txbo/web-server-base/issues"
+    "url": "https://github.com/txbo/web-server-blog-base/issues"
   },
-  "homepage": "https://github.com/txbo/web-server-base#readme",
+  "homepage": "https://github.com/txbo/web-server-blog-base#readme",
   "devDependencies": {
     "cross-env": "^5.2.0",
     "nodemon": "^1.18.11"
